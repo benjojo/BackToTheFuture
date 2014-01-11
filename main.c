@@ -6,8 +6,8 @@
 # include <stdio.h>
 # include <stdlib.h>
 
-#include <netinet/ip.h>
-#include <netinet/ip_icmp.h>
+# include <netinet/ip.h>
+# include <netinet/ip_icmp.h>
 
 main(){
     int sockfd,retval,n;
@@ -40,5 +40,9 @@ main(){
         struct icmphdr *icmp_hdr = (struct icmphdr *)((char *)ip_hdr + (4 * ip_hdr->ihl));
 
         printf("ICMP msgtype=%d, code=%d", icmp_hdr->type, icmp_hdr->code);
+        if(icmp_hdr->type == 8 && icmp_hdr->code == 0) {
+            // We need to start the prediction round thing here.
+
+        }
     }
 }
