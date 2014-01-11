@@ -13,10 +13,11 @@ main(){
     int sockfd,retval,n;
     socklen_t clilen;
     struct sockaddr_in cliaddr, servaddr;
-    char buf[10000]; 
+    char buf[10000]; // Set the buffer size to 10k
     int i;
 
-    sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
+    // Make the raw socket, but only make it look for ICMP packets.
+    sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP); 
     if (sockfd < 0){
         perror("sock:");
         exit(1);
@@ -24,13 +25,13 @@ main(){
     clilen = sizeof(struct sockaddr_in);    
     while(1){
         printf(" before recvfrom\n");   
-        n=recvfrom(sockfd,buf,10000,0,(struct sockaddr *)&cliaddr,&clilen);
+        n = recvfrom(sockfd,buf,10000,0,(struct sockaddr *)&cliaddr,&clilen);
         printf(" rec'd %d bytes\n",n);
 
         struct iphdr *ip_hdr = (struct iphdr *)buf;
 
         printf("IP header is %d bytes.\n", ip_hdr->ihl*4);
-
+        // Print the packet in hex
         for (i = 0; i < n; i++) {
             printf("%02X%s", (uint8_t)buf[i], (i + 1)%16 ? " " : "\n");
         }
