@@ -5,6 +5,9 @@
 # include <netinet/in.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <arpa/inet.h>
+# include <netdb.h>
+
 
 # include <netinet/in.h>
 # include <netinet/ip.h>
@@ -37,6 +40,8 @@ static int in_cksum(unsigned short *buf, int sz)
   ans = ~sum;
   return (ans);
 }
+
+static char *hostname = NULL;
 
 main(){
     int sockfd,retval,n;
@@ -88,7 +93,17 @@ main(){
                 struct sockaddr_in pingaddr;
                 struct icmp *pkt;
                 struct hostent *h;
-
+                char packet[DEFDATALEN + MAXIPLEN + MAXICMPLEN];
+                pingaddr.sin_family = AF_INET;
+                char full[50];
+                sprintf(full, "%d.%d.%d.%d", (int)IPSrc[0], (int)IPSrc[1], (int)IPSrc[2], (int)IPSrc[3]);
+                fprintf(stderr, "ping: unknown host %s\n", full);
+                if (!(h = gethostbyname(full))) {
+                    fprintf(stderr, "ping: unknown host %s\n", full);
+                    exit(1);
+                }
+                memcpy(&pingaddr.sin_addr, h->h_addr, sizeof(pingaddr.sin_addr));
+                hostname = h->h_name;
             }
 
             /*
