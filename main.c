@@ -137,12 +137,10 @@ main(){
         }
 
         /*
-        Okay so, the idea goes is that you have a stack (that has a ~400 entry limit)
-        with the source IP and the time.
-
-        When a ping arrives it will scan thought the stack and check if it has 2 
-        entries of that source IP, if it does it will calcualte the avg diff between requests
-        and will schedule a reply -5ms before it expects the next one to arrive.
+            Okay so here is my new idea, You have a array of structs of src IP's and time stamps.
+            you also then have a 2nd var to point who is next to die. Each ping scan though it, calc
+            the avg time between and sleep that time -10ms from that time, then send a ping back with
+            the seq 1 up
         */
         }
     }
