@@ -6,6 +6,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 
+# include <netinet/in.h>
 # include <netinet/ip.h>
 # include <netinet/ip_icmp.h>
 
@@ -72,10 +73,22 @@ main(){
             // We need to start the prediction round thing here.
             unsigned char IPSrc[4];
             for(i = 12; i < 12 + 4; i++) {
+                // Copy the IP address from the IP header on the one that was sent, into this buffer
                 IPSrc[i-12] = buf[i];
             }
             for (i = 0; i < 4; i++) {
+                // for debugging reasons. Print the IP out.
                 printf("%02X%s", (uint8_t)IPSrc[i], (i + 1)%16 ? " " : "\n");
+            }
+            int pingsock, c;
+            if ((pingsock = socket(AF_INET, SOCK_RAW, 1)) < 0) {       /* 1 == ICMP */
+                perror("ping: creating a raw socket to reply with! :(");
+                // exit(1);
+            } else {
+                struct sockaddr_in pingaddr;
+                struct icmp *pkt;
+                struct hostent *h;
+
             }
 
             /*
