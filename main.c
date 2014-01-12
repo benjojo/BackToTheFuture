@@ -33,7 +33,6 @@ static int in_cksum(unsigned short *buf, int sz)
  
   sum = (sum >> 16) + (sum & 0xFFFF);
   sum += (sum >> 16);
-//   ans = .sum;
   ans = ~sum;
   return (ans);
 }
