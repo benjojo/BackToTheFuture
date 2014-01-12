@@ -10,6 +10,7 @@
 # include <netdb.h>
 # include <stdbool.h>
 # include <sys/queue.h>
+# include <time.h>
 
 
 # include <netinet/in.h>
@@ -40,6 +41,15 @@ static int in_cksum(unsigned short *buf, int sz)
 }
 
 static char *hostname = NULL;
+
+// struct thing {
+//     struct sockaddr_in arse;
+//     int time;
+// }
+
+// struct thing things[400]; 
+
+static int Delay = 10;
 
 main(){
     int sockfd,retval,n;
@@ -106,10 +116,15 @@ main(){
                 }
                 memcpy(&pingaddr.sin_addr, h->h_addr, sizeof(pingaddr.sin_addr));
                 hostname = h->h_name;
+                // Now we need to get the seq number and then inc it by one. Then put it back
+                // in what we are going to respond with.
+                packet[7]++;
 
                 pkt = (struct icmp *) packet;
                 pkt->icmp_cksum = in_cksum((unsigned short *) pkt, sizeof(packet));
 
+                usleep(Delay); // Sleep for just enough time.
+                Delay = Delay + 1000;
                 c = sendto(pingsock, packet, sizeof(packet), 0,
                     (struct sockaddr *) &pingaddr, sizeof(struct sockaddr_in));
                 if (c < 0 || c != sizeof(packet)) {
