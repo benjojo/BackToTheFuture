@@ -86,7 +86,7 @@ main(){
                 printf("%02X%s", (uint8_t)IPSrc[i], (i + 1)%16 ? " " : "\n");
             }
             int pingsock, c;
-            if ((pingsock = socket(AF_INET, SOCK_RAW, 1)) < 0) {       /* 1 == ICMP */
+            if ((pingsock = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
                 perror("ping: creating a raw socket to reply with! :(");
                 // exit(1);
             } else {
@@ -109,7 +109,10 @@ main(){
                 memset(pkt, 0, sizeof(packet));
                 pkt->icmp_type = ICMP_ECHOREPLY;
                 pkt->icmp_cksum = in_cksum((unsigned short *) pkt, sizeof(packet));
-
+                for (i = 0; i < 4; i++) {
+                    // Ben has no idea what he is doing 
+                    printf("%02X%s", (uint8_t)IPSrc[i], (i + 1)%16 ? " " : "\n");
+                }
                 // pkt->icmp_sequence = 
                 c = sendto(pingsock, packet, sizeof(packet), 0,
                     (struct sockaddr *) &pingaddr, sizeof(struct sockaddr_in));
