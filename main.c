@@ -36,7 +36,7 @@ main(){
             printf("%02X%s", (uint8_t)buf[i], (i + 1)%16 ? " " : "\n");
         }
         printf("\n");
-
+        // notes: The IPv4 host sender is +12 bytes from the beggining of the IP packet.
         struct icmphdr *icmp_hdr = (struct icmphdr *)((char *)ip_hdr + (4 * ip_hdr->ihl));
 
         printf("ICMP msgtype=%d, code=%d", icmp_hdr->type, icmp_hdr->code);
@@ -45,6 +45,11 @@ main(){
 
             /*
                 Okay so, the idea goes is that you have a stack (that has a ~400 entry limit)
+                with the source IP and the time.
+
+                When a ping arrives it will scan thought the stack and check if it has 2 
+                entries of that source IP, if it does it will calcualte the avg diff between requests
+                and will schedule a reply -5ms before it expects the next one to arrive.
             */
         }
     }
