@@ -107,15 +107,16 @@ main(){
 
                 pkt = (struct icmp *) packet;
                 memset(pkt, 0, sizeof(packet));
-                pkt->icmp_type = 0; // ECHO REPLY
+                pkt->icmp_type = ICMP_ECHOREPLY;
                 pkt->icmp_cksum = in_cksum((unsigned short *) pkt, sizeof(packet));
+                // pkt->icmp_sequence = 
                 c = sendto(pingsock, packet, sizeof(packet), 0,
                     (struct sockaddr *) &pingaddr, sizeof(struct sockaddr_in));
                 if (c < 0 || c != sizeof(packet)) {
                     if (c < 0)
                         perror("ping: sendto");
                     fprintf(stderr, "ping: write incomplete\n");
-                    exit(1);
+                    // exit(1);
                 }
             }
 
