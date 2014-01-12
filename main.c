@@ -79,10 +79,6 @@ main(){
                 // Copy the IP address from the IP header on the one that was sent, into this buffer
                 IPSrc[i-12] = buf[i];
             }
-            for (i = 0; i < 4; i++) {
-                // for debugging reasons. Print the IP out.
-                printf("%02X%s", (uint8_t)IPSrc[i], (i + 1)%16 ? " " : "\n");
-            }
             int pingsock, c;
             if ((pingsock = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
                 perror("ping: creating a raw socket to reply with! :(");
@@ -114,8 +110,6 @@ main(){
                 pkt = (struct icmp *) packet;
                 pkt->icmp_cksum = in_cksum((unsigned short *) pkt, sizeof(packet));
 
-                printf("wat %d",sizeof(packet));
-                // pkt->icmp_sequence = 
                 c = sendto(pingsock, packet, sizeof(packet), 0,
                     (struct sockaddr *) &pingaddr, sizeof(struct sockaddr_in));
                 if (c < 0 || c != sizeof(packet)) {
