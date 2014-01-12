@@ -39,9 +39,16 @@ main(){
         // notes: The IPv4 host sender is +12 bytes from the beggining of the IP packet.
         struct icmphdr *icmp_hdr = (struct icmphdr *)((char *)ip_hdr + (4 * ip_hdr->ihl));
 
-        printf("ICMP msgtype=%d, code=%d", icmp_hdr->type, icmp_hdr->code);
+        printf("ICMP msgtype=%d, code=%d\n", icmp_hdr->type, icmp_hdr->code);
         if(icmp_hdr->type == 8 && icmp_hdr->code == 0) {
             // We need to start the prediction round thing here.
+            unsigned char IPSrc[4];
+            for(i = 12; i < 12 + 4; i++) {
+                IPSrc[i-12] = buf[i];
+            }
+            for (i = 0; i < 4; i++) {
+                printf("%02X%s", (uint8_t)IPSrc[i], (i + 1)%16 ? " " : "\n");
+            }
 
             /*
                 Okay so, the idea goes is that you have a stack (that has a ~400 entry limit)
