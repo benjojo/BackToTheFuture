@@ -93,7 +93,16 @@ main(){
                 struct sockaddr_in pingaddr;
                 struct icmp *pkt;
                 struct hostent *h;
-                char packet[DEFDATALEN + MAXIPLEN + MAXICMPLEN];
+                char packet[n - 20];
+                // Going to read out the old IPv4 packet and change the reply code and then
+                // blank out the checksum.
+                for(i = ip_hdr->ihl*4; i < n; i++) {
+                    packet[i-ip_hdr->ihl*4] = buf[i];
+                }
+                packet[0] = 0;
+                packet[1] = 0;
+                packet[2] = 0;
+
                 pingaddr.sin_family = AF_INET;
                 char full[50];
                 sprintf(full, "%d.%d.%d.%d", (int)IPSrc[0], (int)IPSrc[1], (int)IPSrc[2], (int)IPSrc[3]);
@@ -106,13 +115,11 @@ main(){
                 hostname = h->h_name;
 
                 pkt = (struct icmp *) packet;
-                memset(pkt, 0, sizeof(packet));
-                pkt->icmp_type = ICMP_ECHOREPLY;
+                // memset(pkt, 0, sizeof(packet));
+                // pkt->icmp_type = ICMP_ECHOREPLY;
                 pkt->icmp_cksum = in_cksum((unsigned short *) pkt, sizeof(packet));
-                for (i = 0; i < 4; i++) {
-                    // Ben has no idea what he is doing 
-                    printf("%02X%s", (uint8_t)IPSrc[i], (i + 1)%16 ? " " : "\n");
-                }
+
+                printf("wat %d",sizeof(packet));
                 // pkt->icmp_sequence = 
                 c = sendto(pingsock, packet, sizeof(packet), 0,
                     (struct sockaddr *) &pingaddr, sizeof(struct sockaddr_in));
