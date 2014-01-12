@@ -9,6 +9,35 @@
 # include <netinet/ip.h>
 # include <netinet/ip_icmp.h>
 
+
+#define DEFDATALEN      56
+#define MAXIPLEN        60
+#define MAXICMPLEN      76
+
+static int in_cksum(unsigned short *buf, int sz)
+{
+  int nleft = sz;
+  int sum = 0;
+  unsigned short *w = buf;
+  unsigned short ans = 0;
+ 
+  while (nleft > 1) {
+    sum += *w++;
+    nleft -= 2;
+  }
+ 
+  if (nleft == 1) {
+    *(unsigned char *) (&ans) = *(unsigned char *) w;
+    sum += ans;
+  }
+ 
+  sum = (sum >> 16) + (sum & 0xFFFF);
+  sum += (sum >> 16);
+//   ans = .sum;
+  ans = ~sum;
+  return (ans);
+}
+
 main(){
     int sockfd,retval,n;
     socklen_t clilen;
