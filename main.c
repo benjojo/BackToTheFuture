@@ -32,7 +32,7 @@ main(){
 
         printf("IP header is %d bytes.\n", ip_hdr->ihl*4);
         // Print the packet in hex
-        for (i = 0; i < n; i++) {
+        for (i = ip_hdr->ihl*4; i < n; i++) {
             printf("%02X%s", (uint8_t)buf[i], (i + 1)%16 ? " " : "\n");
         }
         printf("\n");
@@ -43,6 +43,9 @@ main(){
         if(icmp_hdr->type == 8 && icmp_hdr->code == 0) {
             // We need to start the prediction round thing here.
 
+            /*
+                Okay so, the idea goes is that you have a stack (that has a ~400 entry limit)
+            */
         }
     }
 }
