@@ -49,7 +49,7 @@ static char *hostname = NULL;
 
 // struct thing things[400]; 
 
-static int Delay = 10;
+static int Delay = 1000000;
 
 main(){
     int sockfd,retval,n;
