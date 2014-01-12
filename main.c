@@ -16,11 +16,6 @@
 # include <netinet/ip.h>
 # include <netinet/ip_icmp.h>
 
-
-#define DEFDATALEN      56
-#define MAXIPLEN        60
-#define MAXICMPLEN      76
-
 static int in_cksum(unsigned short *buf, int sz)
 {
     int nleft = sz;
@@ -117,8 +112,6 @@ main(){
                 hostname = h->h_name;
 
                 pkt = (struct icmp *) packet;
-                // memset(pkt, 0, sizeof(packet));
-                // pkt->icmp_type = ICMP_ECHOREPLY;
                 pkt->icmp_cksum = in_cksum((unsigned short *) pkt, sizeof(packet));
 
                 printf("wat %d",sizeof(packet));
@@ -143,47 +136,4 @@ main(){
             */
         }
     }
-}
-
-
-struct entry {
-    int value;
-    TAILQ_ENTRY(entry) entries;
-};
-
-typedef struct entry entry_t;
-
-TAILQ_HEAD(FIFOList_s, entry);
-
-typedef struct FIFOList_s FIFOList;
-
-
-bool m_enqueue(int v, FIFOList *l)
-{
-    entry_t *val;
-    val = malloc(sizeof(entry_t));
-    if ( val != NULL ) {
-        val->value = v;
-        TAILQ_INSERT_TAIL(l, val, entries);
-        return true;
-    }
-    return false;
-}
-
-bool m_dequeue(int *v, FIFOList *l)
-{
-    entry_t *e = l->tqh_first;
-    if ( e != NULL ) {
-        *v = e->value;
-        TAILQ_REMOVE(l, e, entries);
-        free(e);
-        return true;
-    }
-    return false;
-}
-
-bool isQueueEmpty(FIFOList *l)
-{
-    if ( l->tqh_first == NULL ) return true;
-    return false;
 }
