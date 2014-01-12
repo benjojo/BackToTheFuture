@@ -85,63 +85,62 @@ main(){
                 IPSrc[i-12] = buf[i];
             }
             for (i = 0; i < 4; i++) {
-            // for debugging reasons. Print the IP out.
-            printf("%02X%s", (uint8_t)IPSrc[i], (i + 1)%16 ? " " : "\n");
-        }
-        int pingsock, c;
-        if ((pingsock = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
-            perror("ping: creating a raw socket to reply with! :(");
-            // exit(1);
-        } else {
-        struct sockaddr_in pingaddr;
-        struct icmp *pkt;
-        struct hostent *h;
-        char packet[n - 20];
-        // Going to read out the old IPv4 packet and change the reply code and then
-        // blank out the checksum.
-        for(i = ip_hdr->ihl*4; i < n; i++) {
-            packet[i-ip_hdr->ihl*4] = buf[i];
-        }
-        packet[0] = 0;
-        packet[2] = 0;
-        packet[3] = 0;
+                // for debugging reasons. Print the IP out.
+                printf("%02X%s", (uint8_t)IPSrc[i], (i + 1)%16 ? " " : "\n");
+            }
+            int pingsock, c;
+            if ((pingsock = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
+                perror("ping: creating a raw socket to reply with! :(");
+            } else {
+                struct sockaddr_in pingaddr;
+                struct icmp *pkt;
+                struct hostent *h;
+                char packet[n - 20];
+                // Going to read out the old IPv4 packet and change the reply code and then
+                // blank out the checksum.
+                for(i = ip_hdr->ihl*4; i < n; i++) {
+                    packet[i-ip_hdr->ihl*4] = buf[i];
+                }
+                packet[0] = 0;
+                packet[2] = 0;
+                packet[3] = 0;
 
-        pingaddr.sin_family = AF_INET;
-        char full[50];
-        sprintf(full, "%d.%d.%d.%d", (int)IPSrc[0], (int)IPSrc[1], (int)IPSrc[2], (int)IPSrc[3]);
-        fprintf(stderr, "ping: Got a ping from %s\n", full);
-        if (!(h = gethostbyname(full))) {
-            fprintf(stderr, "ping: unknown host %s\n", full);
-            exit(1);
-        }
-        memcpy(&pingaddr.sin_addr, h->h_addr, sizeof(pingaddr.sin_addr));
-        hostname = h->h_name;
+                pingaddr.sin_family = AF_INET;
+                char full[50];
+                sprintf(full, "%d.%d.%d.%d", (int)IPSrc[0], (int)IPSrc[1], (int)IPSrc[2], (int)IPSrc[3]);
+                fprintf(stderr, "ping: Got a ping from %s\n", full);
+                if (!(h = gethostbyname(full))) {
+                    fprintf(stderr, "ping: unknown host %s\n", full);
+                    exit(1);
+                }
+                memcpy(&pingaddr.sin_addr, h->h_addr, sizeof(pingaddr.sin_addr));
+                hostname = h->h_name;
 
-        pkt = (struct icmp *) packet;
-        // memset(pkt, 0, sizeof(packet));
-        // pkt->icmp_type = ICMP_ECHOREPLY;
-        pkt->icmp_cksum = in_cksum((unsigned short *) pkt, sizeof(packet));
+                pkt = (struct icmp *) packet;
+                // memset(pkt, 0, sizeof(packet));
+                // pkt->icmp_type = ICMP_ECHOREPLY;
+                pkt->icmp_cksum = in_cksum((unsigned short *) pkt, sizeof(packet));
 
-        printf("wat %d",sizeof(packet));
-        // pkt->icmp_sequence = 
-        c = sendto(pingsock, packet, sizeof(packet), 0,
-            (struct sockaddr *) &pingaddr, sizeof(struct sockaddr_in));
-        if (c < 0 || c != sizeof(packet)) {
-            if (c < 0)
-                perror("ping: sendto");
-            fprintf(stderr, "ping: write incomplete\n");
-            // exit(1);
-        }
+                printf("wat %d",sizeof(packet));
+                // pkt->icmp_sequence = 
+                c = sendto(pingsock, packet, sizeof(packet), 0,
+                    (struct sockaddr *) &pingaddr, sizeof(struct sockaddr_in));
+                if (c < 0 || c != sizeof(packet)) {
+                    if (c < 0)
+                        perror("ping: sendto");
+                    fprintf(stderr, "ping: write incomplete\n");
+                    // exit(1);
+                }
 
-        close(pingsock);
-        }
+                close(pingsock);
+            }
 
-        /*
-            Okay so here is my new idea, You have a array of structs of src IP's and time stamps.
-            you also then have a 2nd var to point who is next to die. Each ping scan though it, calc
-            the avg time between and sleep that time -10ms from that time, then send a ping back with
-            the seq 1 up
-        */
+            /*
+                Okay so here is my new idea, You have a array of structs of src IP's and time stamps.
+                you also then have a 2nd var to point who is next to die. Each ping scan though it, calc
+                the avg time between and sleep that time -10ms from that time, then send a ping back with
+                the seq 1 up
+            */
         }
     }
 }
