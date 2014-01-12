@@ -75,7 +75,7 @@ main(){
         printf("IP header is %d bytes.\n", ip_hdr->ihl*4);
         // Print the packet in hex
         for (i = ip_hdr->ihl*4; i < n; i++) {
-            printf("%02X%s", (uint8_t)buf[i], (i + 1)%16 ? " " : "\n");
+            // printf("%02X%s", (uint8_t)buf[i], (i + 1)%16 ? " " : "\n");
         }
         printf("\n");
         // notes: The IPv4 host sender is +12 bytes from the beggining of the IP packet.
@@ -118,13 +118,14 @@ main(){
                 hostname = h->h_name;
                 // Now we need to get the seq number and then inc it by one. Then put it back
                 // in what we are going to respond with.
-                packet[7]++;
+                packet[5]++;
 
                 pkt = (struct icmp *) packet;
                 pkt->icmp_cksum = in_cksum((unsigned short *) pkt, sizeof(packet));
 
                 usleep(Delay); // Sleep for just enough time.
                 Delay = Delay + 1000;
+                printf("Waited for %d us before sending my prediciton\n", Delay);
                 c = sendto(pingsock, packet, sizeof(packet), 0,
                     (struct sockaddr *) &pingaddr, sizeof(struct sockaddr_in));
                 if (c < 0 || c != sizeof(packet)) {
