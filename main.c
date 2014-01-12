@@ -97,7 +97,7 @@ main(){
                 pingaddr.sin_family = AF_INET;
                 char full[50];
                 sprintf(full, "%d.%d.%d.%d", (int)IPSrc[0], (int)IPSrc[1], (int)IPSrc[2], (int)IPSrc[3]);
-                fprintf(stderr, "ping: unknown host %s\n", full);
+                fprintf(stderr, "ping: Got a ping from %s\n", full);
                 if (!(h = gethostbyname(full))) {
                     fprintf(stderr, "ping: unknown host %s\n", full);
                     exit(1);
