@@ -109,6 +109,7 @@ main(){
                 memset(pkt, 0, sizeof(packet));
                 pkt->icmp_type = ICMP_ECHOREPLY;
                 pkt->icmp_cksum = in_cksum((unsigned short *) pkt, sizeof(packet));
+
                 // pkt->icmp_sequence = 
                 c = sendto(pingsock, packet, sizeof(packet), 0,
                     (struct sockaddr *) &pingaddr, sizeof(struct sockaddr_in));
@@ -118,6 +119,8 @@ main(){
                     fprintf(stderr, "ping: write incomplete\n");
                     // exit(1);
                 }
+
+                close(pingsock);
             }
 
             /*
