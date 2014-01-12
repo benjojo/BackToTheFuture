@@ -100,8 +100,8 @@ main(){
                     packet[i-ip_hdr->ihl*4] = buf[i];
                 }
                 packet[0] = 0;
-                packet[1] = 0;
                 packet[2] = 0;
+                packet[3] = 0;
 
                 pingaddr.sin_family = AF_INET;
                 char full[50];
