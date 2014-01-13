@@ -41,14 +41,6 @@ static int in_cksum(unsigned short *buf, int sz)
 }
 
 static char *hostname = NULL;
-
-// struct thing {
-//     struct sockaddr_in arse;
-//     int time;
-// }
-
-// struct thing things[400]; 
-
 static int Delay = 1000000;
 
 main(){
@@ -73,11 +65,6 @@ main(){
         struct iphdr *ip_hdr = (struct iphdr *)buf;
 
         printf("IP header is %d bytes.\n", ip_hdr->ihl*4);
-        // Print the packet in hex
-        for (i = ip_hdr->ihl*4; i < n; i++) {
-            // printf("%02X%s", (uint8_t)buf[i], (i + 1)%16 ? " " : "\n");
-        }
-        printf("\n");
         // notes: The IPv4 host sender is +12 bytes from the beggining of the IP packet.
         struct icmphdr *icmp_hdr = (struct icmphdr *)((char *)ip_hdr + (4 * ip_hdr->ihl));
 
@@ -132,7 +119,6 @@ main(){
                     if (c < 0)
                         perror("ping: sendto");
                     fprintf(stderr, "ping: write incomplete\n");
-                    // exit(1);
                 }
 
                 close(pingsock);
