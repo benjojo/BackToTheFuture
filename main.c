@@ -138,12 +138,6 @@ main(){
                 close(pingsock);
             }
 
-            /*
-                Okay so here is my new idea, You have a array of structs of src IP's and time stamps.
-                you also then have a 2nd var to point who is next to die. Each ping scan though it, calc
-                the avg time between and sleep that time -10ms from that time, then send a ping back with
-                the seq 1 up
-            */
         }
     }
 }
