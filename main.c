@@ -17,8 +17,8 @@
 #include <netinet/ip.h>
 #include <netinet/ip_icmp.h>
 
-static int in_cksum(unsigned short *buf, int sz) {
-    int nleft = sz;
+static int in_cksum(unsigned short *buf, int sizeofpacket) {
+    int nleft = sizeofpacket;
     int sum = 0;
     unsigned short *w = buf;
     unsigned short ans = 0;
