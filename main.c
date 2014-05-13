@@ -1,21 +1,21 @@
-# include <unistd.h>
-# include <sys/socket.h>
-# include <sys/types.h>
-# include <sys/queue.h>
-# include <string.h>
-# include <netinet/in.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <arpa/inet.h>
-# include <netdb.h>
-# include <stdbool.h>
-# include <sys/queue.h>
-# include <time.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <sys/queue.h>
+#include <string.h>
+#include <netinet/in.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <stdbool.h>
+#include <sys/queue.h>
+#include <time.h>
 
 
-# include <netinet/in.h>
-# include <netinet/ip.h>
-# include <netinet/ip_icmp.h>
+#include <netinet/in.h>
+#include <netinet/ip.h>
+#include <netinet/ip_icmp.h>
 
 static int in_cksum(unsigned short *buf, int sz)
 {
