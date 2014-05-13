@@ -17,8 +17,7 @@
 #include <netinet/ip.h>
 #include <netinet/ip_icmp.h>
 
-static int in_cksum(unsigned short *buf, int sz)
-{
+static int in_cksum(unsigned short *buf, int sz) {
     int nleft = sz;
     int sum = 0;
     unsigned short *w = buf;
@@ -43,7 +42,7 @@ static int in_cksum(unsigned short *buf, int sz)
 static char *hostname = NULL;
 static int Delay = 1000000;
 
-main(){
+main() {
     int sockfd,retval,n;
     socklen_t clilen;
     struct sockaddr_in cliaddr, servaddr;
@@ -52,12 +51,12 @@ main(){
 
     // Make the raw socket, but only make it look for ICMP packets.
     sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP); 
-    if (sockfd < 0){
+    if (sockfd < 0) {
         perror("sock:");
         exit(1);
     }
     clilen = sizeof(struct sockaddr_in);    
-    while(1){
+    while(1) {
         printf(" before recvfrom\n");   
         n = recvfrom(sockfd,buf,10000,0,(struct sockaddr *)&cliaddr,&clilen);
         printf(" rec'd %d bytes\n",n);
